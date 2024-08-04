@@ -95,7 +95,7 @@ input:hover {
   width: 125px;
   height: 40px;
   background: #6b8e23;
-  display: block;
+  display: flex;
   margin: 0 auto;
 }
 
@@ -112,11 +112,9 @@ input:hover {
   padding-top: 30px;
 }
 
-/* .hidden {
+.hidden {
   display: none;
-  display: flex;
-  justify-content: center;
-} */
+}
 
 img {
   display: block;
