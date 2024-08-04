@@ -6,7 +6,7 @@ import FullReload from 'vite-plugin-full-reload';
 export default defineConfig(({ command }) => {
   return {
     define: {
-      [command === 'serve' ? 'global' : '_global']: {},
+      [command === 'serve' ? 'global' : '_global']: '({})',
     },
     root: 'src',
     build: {
