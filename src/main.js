@@ -1,5 +1,7 @@
 import { fetchImages } from './js/pixabay-api';
 import { renderImages } from './js/render-functions';
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
 
 const form = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
@@ -16,7 +18,10 @@ form.addEventListener('submit', async (e) => {
     currentPage = 1;
     gallery.innerHTML = '';
     loadMoreButton.classList.add('hidden');
-    if (currentQuery === '') return;
+    if (currentQuery === '') {iziToast.error({ position: 'topRight', messageColor:  'white', backgroundColor: 'red', title: 'Error', message: 'Search field cannot be empty!',
+});
+return;
+}
 
     await handleFetchImages();
 });
@@ -29,7 +34,10 @@ async function handleFetchImages() {
         const data = await fetchImages(currentQuery, currentPage, perPage);
 
         if (data.hits.length === 0 && currentPage === 1) {
-            alert('No images found. Please try a different query.');
+            iziToast.warning({position: 'topRight', messageColor:  'white', backgroundColor: 'Maroon',
+                title: 'Warning',
+                message: 'No images found. Please try another query.',
+              });
             return;
         }
 
@@ -38,14 +46,29 @@ async function handleFetchImages() {
 
         if (currentPage > Math.ceil(data.totalHits / perPage)) {
             loadMoreButton.classList.add('hidden');
-            alert("We're sorry, but you've reached the end of search results.");
+            iziToast.info({position: 'topRight', messageColor:  'white', backgroundColor: `Cyan`,
+                title: 'Info',
+                message: "We're sorry, but you've reached the end of search results.",
+              });
+            
         } else {
             loadMoreButton.classList.remove('hidden');
         }
 
+
         smoothScroll();
     } catch (error) {
-        console.error(error);
+        if (!error.response) {
+                iziToast.error({position: 'topRight', messageColor:  'white', backgroundColor: 'Salmon',
+                title: 'Error',
+                message: 'NETWORK error. Please check your internet connection and try again.',
+                });
+            } else {
+                iziToast.error({position: 'topRight', messageColor:  'white', backgroundColor: 'Salmon',
+                title: 'Error',
+                message: 'An error occurred. Please try again.',
+            });
+        }
     } finally {
         loadingIndicator.classList.add('hidden');
     }
@@ -58,3 +81,4 @@ function smoothScroll() {
         behavior: 'smooth',
     });
 }
+
